@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Regalo para Cris</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+</head>
+<body onload="init()">
+  <div id="confetti-bg"></div>
+  <main class="tarjeta">
+    <section id="inicio" class="pantalla activa">
+      <h1>¡Feliz Cumpleaños, Cris! 🎉</h1>
+      <button onclick="mostrar('viaje')">Ver tu regalo</button>
+      <audio id="audio" loop>
+        <source src="assets/music.mp3" type="audio/mp3">
+      </audio>
+      <button onclick="toggleAudio()">▶️ Música de fondo</button>
+    </section>
+
+    <section id="viaje" class="pantalla">
+      <h2>🌍 Viaje en pareja</h2>
+      <p>Reserva del <strong>18 de septiembre</strong> al <strong>21 de septiembre</strong> de 2025</p>
+      <a href="http://corkvalley.es/" target="_blank">Ver alojamiento reservado</a>
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!... (tu embed generada)" width="100%" height="250" style="border:0;" loading="lazy"></iframe>
+      <button onclick="mostrar('comidas')">Ver comidas y actividades</button>
+    </section>
+
+    <section id="comidas" class="pantalla">
+      <h2>🍽️ Comida y actividades</h2>
+      <ul>
+        <li>Piscina exterior / infinity</li>
+        <li>Spa y jacuzzi</li>
+        <li>Rutas en bici y a pie</li>
+        <li>Clases de cocina y cenas temáticas</li>
+        <li>Música en vivo y tours culturales</li>
+      </ul>
+      <button onclick="mostrar('actividades')">Ver actividades detalladas</button>
+    </section>
+
+    <section id="actividades" class="pantalla">
+      <h2>🎈 Actividades destacadas</h2>
+      <ul>
+        <li>Masaje en pareja (sábado)</li>
+        <li>Paseo por la finca</li>
+        <li>Observación de estrellas</li>
+      </ul>
+      <button onclick="mostrar('contador')">Ver cuenta atrás</button>
+    </section>
+
+    <section id="contador" class="pantalla">
+      <h2>⏳ Contador para el viaje</h2>
+      <p id="contador-text"></p>
+      <a id="cal-link" href="#" target="_blank">📅 Añadir al Google Calendar</a>
+      <div class="qr">
+        <img id="qr-img" src="assets/qr-placeholder.png" alt="QR para abrir en el móvil"/>
+      </div>
+      <button onclick="mostrar('inicio')">Volver al inicio</button>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
