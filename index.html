@@ -1,43 +1,53 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Regalo para Cris</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
 </head>
 <body onload="init()">
   <div id="confetti-bg"></div>
   <main class="tarjeta">
+    <h1>¡Feliz cumpleaños, Cris! 🎉</h1>
+
     <section id="inicio" class="pantalla activa">
-      <h1>¡Feliz Cumpleaños, Cris! 🎉</h1>
+      <h2>🌍 Ubicación del viaje</h2>
+      <iframe
+        src="https://maps.google.com/maps?q=39.631479,-4.520924&z=14&output=embed"
+        width="100%" height="300" class="mapa">
+      </iframe>
+      <p><a href="http://corkvalley.es/" target="_blank">Ver alojamiento</a></p>
+      <p>
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Viaje+en+pareja&dates=20250918/20250922&details=Escapada+romántica+reservada&location=http://corkvalley.es" target="_blank">
+          📅 Añadir a Google Calendar
+        </a>
+      </p>
+      <div class="qr">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://edboma.github.io/regalo2025&size=150x150" alt="QR para abrir en móvil">
+      </div>
       <button onclick="mostrar('comidas')">Ver comidas</button>
       <button onclick="mostrar('actividades')">Ver actividades</button>
     </section>
 
     <section id="comidas" class="pantalla">
       <h2>🍽️ Opciones de comida</h2>
-      <div class="foto-opcion"><img src="assets/comida1.jpg" alt="Comida 1"><p class="comentario">Esta la deberíamos coger.</p></div>
-      <div class="foto-opcion"><img src="assets/comida2.jpg" alt="Comida 2"><p class="comentario">Tampoco estaría mal.</p></div>
-      <div class="foto-opcion"><img src="assets/comida3.jpg" alt="Comida 3"><p class="comentario">¿Qué me dices de este?</p></div>
-      <button onclick="mostrar('inicio')">Inicio</button>
-      <button onclick="mostrar('actividades')">Actividades</button>
+      <div class="foto-opcion"><img src="assets/comida1.jpg"><p class="comentario">Esta la deberíamos coger.</p></div>
+      <div class="foto-opcion"><img src="assets/comida2.jpg"><p class="comentario">Tampoco estaría mal.</p></div>
+      <div class="foto-opcion"><img src="assets/comida3.jpg"><p class="comentario">¿Qué me dices de este?</p></div>
+      <p><a href="https://upsell.whistle.cloudbeds.com/227547/products" target="_blank">Ver más opciones de comida</a></p>
+      <button onclick="mostrar('inicio')">Volver al inicio</button>
+      <button onclick="mostrar('actividades')">Ir a actividades</button>
     </section>
 
     <section id="actividades" class="pantalla">
       <h2>🎈 Actividades</h2>
-      <div class="foto-opcion"><img src="assets/actividad1.jpg" alt="Bicis eléctricas"><p class="comentario">Paseo por el campo con una bici NOOoo..</p></div>
-      <div class="foto-opcion"><img src="assets/actividad2.jpg" alt="Quad a pedales"><p class="comentario">Como una bici pero de 4 ruedas!</p></div>
-      <button onclick="mostrar('inicio')">Inicio</button>
-      <button onclick="mostrar('comidas')">Comidas</button>
-    </section>
-
-    <section id="mapa" class="pantalla">
-      <h2>🌍 Ubicación</h2>
-      <iframe src="https://maps.google.com/maps?q=39.631479,-4.520924&z=14&output=embed"
-        width="100%" height="300" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy">
-      </iframe>
+      <div class="foto-opcion"><img src="assets/actividad1.jpg"><p class="comentario">Paseo por el campo con una bici NOOoo..</p></div>
+      <div class="foto-opcion"><img src="assets/actividad2.jpg"><p class="comentario">Como una bici pero de 4 ruedas!</p></div>
+      <p><a href="https://upsell.whistle.cloudbeds.com/227547/products" target="_blank">Ver más actividades</a></p>
+      <button onclick="mostrar('inicio')">Volver al inicio</button>
+      <button onclick="mostrar('comidas')">Ir a comidas</button>
     </section>
   </main>
 
