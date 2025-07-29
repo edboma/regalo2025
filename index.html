@@ -10,7 +10,7 @@
 <body onload="init()">
   <div id="confetti-bg"></div>
   <main class="tarjeta">
-    
+
     <!-- Pantalla principal -->
     <section id="inicio" class="pantalla activa">
       <h1>¡Feliz Cumpleaños, Cris! 🎉</h1>
@@ -27,40 +27,30 @@
       <p>Reserva del <strong>18 de septiembre</strong> al <strong>21 de septiembre</strong> de 2025</p>
       <a href="http://corkvalley.es/" target="_blank">Ver alojamiento reservado</a>
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!... (tu embed generada)" width="100%" height="250" style="border:0;" loading="lazy"></iframe>
-      <button onclick="mostrar('comidas')">Ver comidas</button>
+      <button onclick="mostrar('comidas')">Ver comidas y actividades</button>
     </section>
 
     <!-- Pantalla comidas -->
     <section id="comidas" class="pantalla">
-      <h2>🍽️ Comidas especiales</h2>
-
-      <div class="foto-opcion">
-        <img src="assets/comida1.jpg" alt="Comida 1">
-        <p class="comentario">Esta cena la disfrutaremos con velas, música y vino 🍷</p>
-      </div>
-
-      <div class="foto-opcion">
-        <img src="assets/comida2.jpg" alt="Comida 2">
-        <p class="comentario">¿Listos para una clase de cocina juntos? 👩‍🍳👨‍🍳</p>
-      </div>
-
-      <button onclick="mostrar('actividades')">Ver actividades</button>
+      <h2>🍽️ Comida y actividades</h2>
+      <ul>
+        <li>Piscina exterior / infinity</li>
+        <li>Spa y jacuzzi</li>
+        <li>Rutas en bici y a pie</li>
+        <li>Clases de cocina y cenas temáticas</li>
+        <li>Música en vivo y tours culturales</li>
+      </ul>
+      <button onclick="mostrar('actividades')">Ver actividades detalladas</button>
     </section>
 
     <!-- Pantalla actividades -->
     <section id="actividades" class="pantalla">
       <h2>🎈 Actividades destacadas</h2>
-
-      <div class="foto-opcion">
-        <img src="assets/actividad1.jpg" alt="Actividad 1">
-        <p class="comentario">Un paseo en bici por la finca 🚴</p>
-      </div>
-
-      <div class="foto-opcion">
-        <img src="assets/actividad2.jpg" alt="Actividad 2">
-        <p class="comentario">Relajación total con un masaje en pareja 💆‍♀️💆‍♂️</p>
-      </div>
-
+      <ul>
+        <li>Masaje en pareja (sábado)</li>
+        <li>Paseo por la finca</li>
+        <li>Observación de estrellas</li>
+      </ul>
       <button onclick="mostrar('contador')">Ver cuenta atrás</button>
     </section>
 
