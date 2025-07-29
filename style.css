@@ -76,3 +76,19 @@ nav button {
 .qr img {
   width: 150px;
 }
+
+.mapa-ubicacion {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden; /* esto redondea las esquinas del iframe */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.mapa-ubicacion iframe {
+  width: 100%;
+  height: 300px;
+  display: block;
+  border: none;
+}
