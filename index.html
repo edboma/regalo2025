@@ -6,7 +6,8 @@
   <title>Regalo para Cris</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body onload="initConfetti(); mostrar('inicio')">
+  <canvas id="canvas-fondo"></canvas>
   <main class="tarjeta">
     <h1>¡Feliz cumpleaños, Cris! 🎉</h1>
     <div id="contador"></div>
@@ -60,43 +61,14 @@
       </div>
       <div class="foto-opcion">
         <img src="assets/actividad2.jpg" alt="Quad a pedales">
-        <p class="comentario">¡Como una bici pero de 4 ruedas!</p>
+        <p class="comentario">Como una bici pero de 4 ruedas!</p>
       </div>
       <p><a href="https://upsell.whistle.cloudbeds.com/227547/products" target="_blank">Ver más actividades</a></p>
     </section>
   </main>
 
   <audio src="assets/musica.mp3" autoplay loop muted></audio>
-  <script src="script.js"></script>
-
-  <!-- Librería de confeti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-
-  <!-- Script de confeti al cargar -->
-  <script>
-    window.addEventListener('load', () => {
-      const duration = 3000;
-      const animationEnd = Date.now() + duration;
-
-      (function frame() {
-        confetti({
-          particleCount: 5,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0 }
-        });
-        confetti({
-          particleCount: 5,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1 }
-        });
-
-        if (Date.now() < animationEnd) {
-          requestAnimationFrame(frame);
-        }
-      })();
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

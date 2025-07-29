@@ -1,28 +1,56 @@
+
+let confettiInstance;
+let interval;
+
+function initConfetti() {
+  const canvas = document.getElementById('canvas-fondo');
+  confettiInstance = confetti.create(canvas, { resize: true });
+}
+
+function lanzarConfeti(tipo) {
+  clearInterval(interval);
+
+  if (tipo === 'inicio') {
+    interval = setInterval(() => {
+      confettiInstance({
+        particleCount: 2,
+        spread: 80,
+        origin: { x: Math.random(), y: Math.random() * 0.6 }
+      });
+    }, 300);
+  }
+
+  if (tipo === 'comidas') {
+    interval = setInterval(() => {
+      confettiInstance({
+        particleCount: 3,
+        angle: 90,
+        spread: 30,
+        shapes: ['square'],
+        colors: ['#f4a261', '#e76f51'],
+        scalar: 1.2,
+        origin: { x: Math.random(), y: 0 }
+      });
+    }, 200);
+  }
+
+  if (tipo === 'actividades') {
+    interval = setInterval(() => {
+      confettiInstance({
+        particleCount: 3,
+        angle: 90,
+        spread: 60,
+        shapes: ['circle'],
+        colors: ['#2a9d8f', '#264653'],
+        scalar: 1.5,
+        origin: { x: Math.random(), y: 0 }
+      });
+    }, 250);
+  }
+}
+
 function mostrar(id) {
   document.querySelectorAll('.pantalla').forEach(sec => sec.classList.remove('activa'));
   document.getElementById(id).classList.add('activa');
+  lanzarConfeti(id);
 }
-
-// Contador
-const destino = new Date("2025-09-18T00:00:00");
-const contador = document.getElementById("contador");
-
-function actualizarContador() {
-  const ahora = new Date();
-  const diferencia = destino - ahora;
-
-  if (diferencia <= 0) {
-    contador.textContent = "¡Ya ha llegado el viaje!";
-    return;
-  }
-
-  const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-  const horas = Math.floor((diferencia / (1000 * 60 * 60)) % 24);
-  const minutos = Math.floor((diferencia / (1000 * 60)) % 60);
-  const segundos = Math.floor((diferencia / 1000) % 60);
-
-  contador.textContent = `Faltan ${dias}d ${horas}h ${minutos}m ${segundos}s para el viaje`;
-}
-
-setInterval(actualizarContador, 1000);
-actualizarContador();
