@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,8 +7,8 @@
   <title>Regalo para Cris</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body onload="initConfetti(); mostrar('inicio')">
-  <canvas id="canvas-fondo"></canvas>
+<body onload="initConfetti()">
+  <canvas id="confetti-canvas"></canvas>
   <main class="tarjeta">
     <h1>¡Feliz cumpleaños, Cris! 🎉</h1>
     <div id="contador"></div>
@@ -28,7 +29,6 @@
         allowfullscreen=""
         loading="lazy">
       </iframe>
-
       <p><a href="http://corkvalley.es/" target="_blank">Ver alojamiento</a></p>
       <p><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Viaje+en+pareja&dates=20250918/20250922&details=Escapada+romántica+reservada&location=http://corkvalley.es" target="_blank">📅 Añadir a Google Calendar</a></p>
       <div class="qr">
@@ -61,14 +61,14 @@
       </div>
       <div class="foto-opcion">
         <img src="assets/actividad2.jpg" alt="Quad a pedales">
-        <p class="comentario">Como una bici pero de 4 ruedas!</p>
+        <p class="comentario">¡Como una bici pero de 4 ruedas!</p>
       </div>
       <p><a href="https://upsell.whistle.cloudbeds.com/227547/products" target="_blank">Ver más actividades</a></p>
     </section>
   </main>
 
   <audio src="assets/musica.mp3" autoplay loop muted></audio>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
