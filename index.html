@@ -7,20 +7,13 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
 </head>
-<body onload="iniciarConfeti()">
-  <canvas id="confetti-canvas"></canvas>
+<body onload="init()">
+  <div id="confetti-bg"></div>
   <main class="tarjeta">
     <section id="inicio" class="pantalla activa">
-      <h1>¡Feliz cumpleaños, Cris! 🎉</h1>
+      <h1>¡Feliz Cumpleaños, Cris! 🎉</h1>
       <button onclick="mostrar('comidas')">Ver comidas</button>
       <button onclick="mostrar('actividades')">Ver actividades</button>
-      <iframe src="https://maps.google.com/maps?q=39.631479,-4.520924&z=13&output=embed"
-        width="100%" height="250" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy"></iframe>
-      <p><a href="http://corkvalley.es/" target="_blank">Ver alojamiento</a></p>
-      <p><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Viaje+en+pareja&dates=20250918/20250922&details=Escapada+romántica+reservada&location=http://corkvalley.es" target="_blank">📅 Añadir a Google Calendar</a></p>
-      <div class="qr">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://edboma.github.io/regalo2025&size=150x150" alt="QR para abrir en móvil">
-      </div>
     </section>
 
     <section id="comidas" class="pantalla">
@@ -28,23 +21,27 @@
       <div class="foto-opcion"><img src="assets/comida1.jpg" alt="Comida 1"><p class="comentario">Esta la deberíamos coger.</p></div>
       <div class="foto-opcion"><img src="assets/comida2.jpg" alt="Comida 2"><p class="comentario">Tampoco estaría mal.</p></div>
       <div class="foto-opcion"><img src="assets/comida3.jpg" alt="Comida 3"><p class="comentario">¿Qué me dices de este?</p></div>
-      <button onclick="mostrar('inicio')">Volver al inicio</button>
+      <button onclick="mostrar('inicio')">Inicio</button>
+      <button onclick="mostrar('actividades')">Actividades</button>
     </section>
 
     <section id="actividades" class="pantalla">
       <h2>🎈 Actividades</h2>
       <div class="foto-opcion"><img src="assets/actividad1.jpg" alt="Bicis eléctricas"><p class="comentario">Paseo por el campo con una bici NOOoo..</p></div>
       <div class="foto-opcion"><img src="assets/actividad2.jpg" alt="Quad a pedales"><p class="comentario">Como una bici pero de 4 ruedas!</p></div>
-      <button onclick="mostrar('inicio')">Volver al inicio</button>
+      <button onclick="mostrar('inicio')">Inicio</button>
+      <button onclick="mostrar('comidas')">Comidas</button>
+    </section>
+
+    <section id="mapa" class="pantalla">
+      <h2>🌍 Ubicación</h2>
+      <iframe src="https://maps.google.com/maps?q=39.631479,-4.520924&z=14&output=embed"
+        width="100%" height="300" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy">
+      </iframe>
     </section>
   </main>
 
-  <audio id="musica" autoplay loop muted>
-    <source src="assets/musica.mp3" type="audio/mp3">
-  </audio>
-  <button onclick="document.getElementById('musica').muted = false;">🔊 Activar música</button>
-
-  <script src="js/confetti.js"></script>
+  <audio src="assets/musica.mp3" autoplay loop></audio>
   <script src="script.js"></script>
 </body>
 </html>
