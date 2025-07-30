@@ -41,3 +41,6 @@ function init() {
     });
     requestAnimationFrame(update);
   }
+
+  update();
+}
