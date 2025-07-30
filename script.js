@@ -118,3 +118,31 @@ function mostrarSorpresa() {
   alert("TE QUIERO CUCHIPU 🎉💖");
   // O podrías mostrar una foto especial, mensaje, etc.
 }
+
+function abrirSorpresa() {
+  document.getElementById("modal-sorpresa").style.display = "none";
+  iniciarCorazones();
+  init(); // tu función de siempre
+}
+
+function iniciarCorazones() {
+  tsParticles.load("confetti-bg", {
+    fullScreen: { enable: true, zIndex: 1 },
+    particles: {
+      number: { value: 60 },
+      shape: {
+        type: "char",
+        character: {
+          value: ["❤️", "💖", "💕"],
+          font: "Verdana",
+          style: "",
+          weight: "400"
+        }
+      },
+      color: { value: "#ff4d4d" },
+      opacity: { value: 0.9 },
+      size: { value: 16 },
+      move: { enable: true, direction: "bottom", speed: 2 }
+    }
+  });
+}
