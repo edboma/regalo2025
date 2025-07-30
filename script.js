@@ -88,3 +88,29 @@ mostrar = function(id) {
 window.addEventListener('DOMContentLoaded', () => {
   actualizarBotones();
 });
+
+function animarPrimeraCarga() {
+  const partes = [
+    "h1",                // ¡Feliz Cumpleaños, Cris!
+    "#contador-text",    // contador
+    "#inicio h2",        // 🧳 Viaje en pareja
+    ".mapa-ubicacion",   // mapa
+    "#cal-link",         // calendario
+    ".qr",               // QR
+    "button[onclick='toggleAudio()']" // botón música
+  ];
+
+  partes.forEach((selector, i) => {
+    const el = document.querySelector(selector);
+    if (el) {
+      el.classList.add("fade-in", `fade-delay-${i + 1}`);
+    }
+  });
+}
+
+// Al cargar la página, aplicar animaciones
+window.addEventListener('DOMContentLoaded', () => {
+  actualizarBotones();
+  animarPrimeraCarga();
+});
+
