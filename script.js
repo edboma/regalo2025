@@ -43,3 +43,48 @@ function generateQr(){
   const pageUrl=window.location.href;
   document.getElementById("qr-img").src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+encodeURIComponent(pageUrl);
 }
+
+function actualizarBotones() {
+  const nav = document.getElementById('botones-nav');
+  const seccion = document.querySelector('.pantalla.activa').id;
+  let botones = [];
+
+  if (seccion === "inicio") {
+    botones = [
+      { id: "comidas", texto: "Comidas" },
+      { id: "actividades", texto: "Actividades" }
+    ];
+  } else if (seccion === "comidas") {
+    botones = [
+      { id: "inicio", texto: "Inicio" },
+      { id: "actividades", texto: "Actividades" }
+    ];
+  } else if (seccion === "actividades") {
+    botones = [
+      { id: "inicio", texto: "Inicio" },
+      { id: "comidas", texto: "Comidas" }
+    ];
+  }
+
+  nav.innerHTML = '';
+  botones.forEach(btn => {
+    const b = document.createElement("button");
+    b.textContent = btn.texto;
+    b.onclick = () => mostrar(btn.id);
+    nav.appendChild(b);
+  });
+}
+
+// Llama a actualizar los botones cada vez que cambias de sección
+const oldMostrar = mostrar;
+mostrar = function(id) {
+  document.querySelectorAll('.pantalla').forEach(s => s.classList.remove('activa'));
+  document.getElementById(id).classList.add('activa');
+  document.body.className = id;
+  actualizarBotones();
+};
+
+// También llama a actualizarBotones al cargar la página
+window.addEventListener('DOMContentLoaded', () => {
+  actualizarBotones();
+});
