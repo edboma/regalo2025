@@ -114,3 +114,7 @@ window.addEventListener('DOMContentLoaded', () => {
   animarPrimeraCarga();
 });
 
+function mostrarSorpresa() {
+  alert("TE QUIERO CUCHIPU 🎉💖");
+  // O podrías mostrar una foto especial, mensaje, etc.
+}
