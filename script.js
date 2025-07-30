@@ -1,46 +1,45 @@
-function mostrar(id) {
-  const secciones = document.querySelectorAll(".pantalla");
-  secciones.forEach(sec => sec.classList.remove("activa"));
-  document.getElementById(id).classList.add("activa");
+function init(){
+  tsParticles.load("confetti-bg", {
+    fullScreen:{enable:true,zIndex:1}, particles:{ number:{value:80}, shape:{type:"circle"}, color:{value:["#FFC700","#FF0000","#2E3192","#41BBC7"]}, opacity:{value:0.9}, size:{value:5}, move:{enable:true,direction:"bottom",speed:4}}
+  });
+  startCounter();
+  generateCalendarLink();
+  generateQr();
 }
 
-function init() {
-  const canvas = document.createElement('canvas');
-  canvas.id = "confetti-canvas";
-  document.getElementById("confetti-bg").appendChild(canvas);
+function mostrar(id){
+  document.querySelectorAll('.pantalla').forEach(s=>s.classList.remove('activa'));
+  document.getElementById(id).classList.add('activa');
+  document.body.className = id;
+}
 
-  const ctx = canvas.getContext("2d");
-  let pieces = [];
-  const numberOfPieces = 100;
+function toggleAudio(){
+  const a=document.getElementById('audio');
+  a.paused? a.play(): a.pause();
+}
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+function startCounter(){
+  const target = new Date("2025-09-18T00:00:00");
+  setInterval(()=>{
+    const now=new Date(), diff=target-now;
+    if(diff<0) return document.getElementById("contador-text").textContent="¡Llegó el día!";
+    const d=Math.floor(diff/86400000), h=Math.floor(diff%86400000/3600000),
+          m=Math.floor(diff%3600000/60000), s=Math.floor(diff%60000/1000);
+    document.getElementById("contador-text").textContent=`Faltan ${d}d ${h}h ${m}m ${s}s para el viaje`;
+  },1000);
+}
 
-  for (let i = 0; i < numberOfPieces; i++) {
-    pieces.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: Math.random() * 6 + 4,
-      color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-      speed: Math.random() * 3 + 1
-    });
-  }
+function generateCalendarLink(){
+  const start="20250918T090000Z", end="20250921T180000Z";
+  const url="https://calendar.google.com/calendar/render?action=TEMPLATE"
+    +"&text=Viaje%20en%20pareja"
+    +"&dates="+start+"/"+end
+    +"&details=Viaje%20para%20disfrutar%20en%20Cork%20Valley"
+    +"&location="+encodeURIComponent("http://corkvalley.es/");
+  document.getElementById("cal-link").href=url;
+}
 
-  function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    pieces.forEach(p => {
-      p.y += p.speed;
-      if (p.y > canvas.height) {
-        p.y = 0;
-        p.x = Math.random() * canvas.width;
-      }
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.fill();
-    });
-    requestAnimationFrame(update);
-  }
-
-  update();
+function generateQr(){
+  const pageUrl=window.location.href;
+  document.getElementById("qr-img").src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+encodeURIComponent(pageUrl);
 }

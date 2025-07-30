@@ -1,76 +1,10 @@
-body {
-  margin: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #fefefe;
-}
-
-#confetti-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1000;
-}
-
-.tarjeta {
-  max-width: 700px;
-  margin: auto;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  position: relative;
-  z-index: 1;
-}
-
-h1 {
-  text-align: center;
-  color: #b30059;
-}
-
-.foto-opcion {
-  margin: 10px 0;
-}
-
-.foto-opcion img {
-  max-width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.comentario {
-  font-style: italic;
-  color: #555;
-}
-
-.botones-seccion {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 20px;
-}
-
-.botones-seccion button {
-  background-color: #e63946;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.botones-seccion button:hover {
-  background-color: #d62839;
-}
-
-.mapa-ubicacion {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
+body { margin:0; font-family:sans-serif; overflow-x:hidden; transition: background 1s; }
+#confetti-bg { position:fixed; top:0;left:0;width:100%;height:100%;z-index:0; }
+.tarjeta { position:relative; z-index:2; max-width:600px; margin:auto; padding:2rem;background:white;border-radius:15px;box-shadow:0 4px 15px rgba(0,0,0,0.1); margin-top:10vh; text-align:center;}
+button { padding:10px 20px; margin:10px; font-size:1rem; background:#f04e4e; color:white; border:none; border-radius:8px; cursor:pointer; }
+.pantalla { display:none; opacity:0; transform: translateY(30px); }
+.pantalla.activa { display:block; animation: fadeIn 0.8s forwards;}
+@keyframes fadeIn { to { opacity:1; transform: translateY(0); } }
+body.viaje { background:#e0f7ff; } body.comidas { background:#fff7e0; } body.actividades { background:#e0ffe0; } body.contador { background:#f0e0ff; }
+ul { text-align:left; display:inline-block; }
+.qr img { width:150px; margin-top:15px;}
