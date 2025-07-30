@@ -43,10 +43,10 @@ ul { text-align:left; display:inline-block; }
 }
 
 .fade-delay-1 { animation-delay: 0.5s; }
-.fade-delay-2 { animation-delay: 1.2s; }
-.fade-delay-3 { animation-delay: 2s; }
-.fade-delay-4 { animation-delay: 2.8s; }
-.fade-delay-5 { animation-delay: 3.5s; }
+.fade-delay-2 { animation-delay: 3.2s; }
+.fade-delay-3 { animation-delay: 5s; }
+.fade-delay-4 { animation-delay: 7.8s; }
+.fade-delay-5 { animation-delay: 10.5s; }
 
 @keyframes fadeInSection {
   to {
