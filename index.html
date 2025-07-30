@@ -5,31 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Regalo para Cris</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
 </head>
 <body onload="init()">
   <div id="confetti-bg"></div>
-
   <main class="tarjeta">
     <h1>¡Feliz cumpleaños, Cris! 🎉</h1>
-    <div id="contador"></div>
 
     <section id="inicio" class="pantalla activa">
+      <div class="botones-seccion">
+        <button onclick="mostrar('comidas')">Ver comidas</button>
+        <button onclick="mostrar('actividades')">Ver actividades</button>
+      </div>
       <h2>🌍 Ubicación del viaje</h2>
       <div class="mapa-ubicacion">
-        <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3072.811213755639!2d-4.523495724830873!3d39.63145437157658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd6a8d6bc97dc797%3A0x863fbe114a0ed92e!2sCork%20Valley!5e0!3m2!1ses!2ses!4v1753825684849!5m2!1ses!2ses"
-          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3110.411339586274!2d-4.522!3d39.6314!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd5a61c40f6cbdf5%3A0x98fd88cc91e0e7d0!2sCork%20Valley!5e0!3m2!1ses!2ses!4v1722268300000!5m2!1ses!2ses"
+          width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
         </iframe>
       </div>
       <p><a href="http://corkvalley.es/" target="_blank">Ver alojamiento</a></p>
       <p><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Viaje+en+pareja&dates=20250918/20250922&details=Escapada+romántica+reservada&location=http://corkvalley.es" target="_blank">📅 Añadir a Google Calendar</a></p>
       <div class="qr">
         <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://edboma.github.io/regalo2025&size=150x150" alt="QR para abrir en móvil">
-      </div>
-      <div class="botones-seccion">
-        <button onclick="mostrar('comidas')">Ver comidas</button>
-        <button onclick="mostrar('actividades')">Ver actividades</button>
       </div>
     </section>
 
@@ -41,7 +38,7 @@
       <p><a href="https://upsell.whistle.cloudbeds.com/227547/products" target="_blank">Ver más opciones de comida</a></p>
       <div class="botones-seccion">
         <button onclick="mostrar('inicio')">Inicio</button>
-        <button onclick="mostrar('actividades')">Ver actividades</button>
+        <button onclick="mostrar('actividades')">Actividades</button>
       </div>
     </section>
 
@@ -52,7 +49,7 @@
       <p><a href="https://upsell.whistle.cloudbeds.com/227547/products" target="_blank">Ver más actividades</a></p>
       <div class="botones-seccion">
         <button onclick="mostrar('inicio')">Inicio</button>
-        <button onclick="mostrar('comidas')">Ver comidas</button>
+        <button onclick="mostrar('comidas')">Comidas</button>
       </div>
     </section>
   </main>
