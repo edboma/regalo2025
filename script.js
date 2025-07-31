@@ -1,29 +1,71 @@
-// Variables globales
+// =============================================
+// VARIABLES GLOBALES Y CONFIGURACIÓN INICIAL
+// =============================================
 let audioPermitido = false;
 let audio = null;
+let particulasIniciadas = false;
 
-// Función para inicializar el audio
-function initAudio() {
-  if (!audio) {
-    audio = new Audio('assets/music.mp3');
-    audio.loop = true;
-    audio.volume = 0.3;
+// =============================================
+// FUNCIONES PRINCIPALES
+// =============================================
+
+function init() {
+  try {
+    // Inicializar componentes
+    initAudio();
+    startCounter();
+    generateCalendarLink();
+    generateQr();
+    actualizarBotones();
+    animarPrimeraCarga();
+    
+    // Configurar eventos
+    const audioControl = document.querySelector('.audio-control');
+    if (audioControl) {
+      audioControl.addEventListener('click', toggleAudio);
+      audioControl.style.display = 'flex'; // Mostrar control de audio
+    }
+    
+    // Precargar recursos
+    precargarImagenes();
+    
+  } catch (error) {
+    console.error("Error en init:", error);
   }
 }
 
-// Función para manejar el audio
+function initAudio() {
+  if (!audio) {
+    try {
+      audio = new Audio('assets/music.mp3');
+      audio.loop = true;
+      audio.volume = 0.3;
+      audio.preload = 'auto';
+      
+      // Manejar errores de audio
+      audio.addEventListener('error', (e) => {
+        console.error("Error en el audio:", e);
+        mostrarErrorAudio();
+      });
+      
+    } catch (error) {
+      console.error("Error al inicializar audio:", error);
+      mostrarErrorAudio();
+    }
+  }
+}
+
 function toggleAudio() {
   try {
-    initAudio(); // Asegurarse que el audio está inicializado
+    if (!audio) initAudio();
+    if (!audio) return;
+
     const icon = document.querySelector('.audio-control i');
     const audioControl = document.querySelector('.audio-control');
     
-    if (!audio) {
-      console.error("Audio no inicializado");
-      return;
-    }
+    if (!icon || !audioControl) return;
 
-    // Efecto visual al pulsar
+    // Efecto visual
     audioControl.classList.add('pulsando');
     setTimeout(() => audioControl.classList.remove('pulsando'), 200);
     
@@ -32,15 +74,17 @@ function toggleAudio() {
       const playPromise = audio.play();
       
       if (playPromise !== undefined) {
-        playPromise.then(_ => {
-          icon.classList.remove('fa-music');
-          icon.classList.add('fa-pause');
-        }).catch(error => {
-          console.error("Error al reproducir:", error);
-          if (audioPermitido) {
-            alert("Por favor, haz clic en el icono de música para activarlo. Algunos navegadores bloquean el audio automático.");
-          }
-        });
+        playPromise
+          .then(_ => {
+            icon.classList.remove('fa-music');
+            icon.classList.add('fa-pause');
+          })
+          .catch(error => {
+            console.error("Error al reproducir:", error);
+            if (audioPermitido) {
+              mostrarAlertaAudio();
+            }
+          });
       }
     } else {
       audio.pause();
@@ -52,58 +96,272 @@ function toggleAudio() {
   }
 }
 
-// Función para inicializar la página
-function init(){
-  startCounter();
-  generateCalendarLink();
-  generateQr();
-  actualizarBotones();
-  animarPrimeraCarga();
-  initAudio(); // Inicializar el audio al cargar
-  
-  // Configurar el control de audio
-  const audioControl = document.querySelector('.audio-control');
-  if (audioControl) {
-    audioControl.addEventListener('click', toggleAudio);
-  }
-}
-
-// Resto de tus funciones se mantienen igual...
-function iniciarCorazones() {
-  tsParticles.load("confetti-bg", {
-    fullScreen:{enable:true,zIndex:1},
-    particles:{
-      number:{value:80},
-      shape:{type:"char", character:{value:"❤", font:"Verdana", style:"", weight:"400"}},
-      color:{value:"#FF69B4"},
-      opacity:{value:0.7},
-      size:{value:16},
-      move:{enable:true, direction:"bottom", speed:3}
-    }
-  });
-}
-
 function empezarSorpresa() {
-  const pantalla = document.getElementById("pantalla-inicial");
-  if (pantalla) {
+  try {
+    const pantalla = document.getElementById("pantalla-inicial");
+    if (!pantalla) return;
+    
     pantalla.style.opacity = 0;
     setTimeout(() => {
       pantalla.style.display = "none";
       const tarjeta = document.querySelector(".tarjeta");
-      if (tarjeta) tarjeta.style.display = "block";
-      iniciarCorazones();
+      if (tarjeta) {
+        tarjeta.style.display = "block";
+        if (!particulasIniciadas) {
+          iniciarCorazones();
+          particulasIniciadas = true;
+        }
+      }
       init();
     }, 800);
+  } catch (error) {
+    console.error("Error en empezarSorpresa:", error);
   }
 }
 
-// ... (mantén el resto de tus funciones igual) ...
+// =============================================
+// FUNCIONES DE UTILIDAD
+// =============================================
 
-// Al final del archivo:
-document.addEventListener('DOMContentLoaded', function() {
-  // Configurar el reajuste de imagen al cambiar tamaño
-  window.addEventListener('resize', ajustarImagenInicial);
+function mostrarErrorAudio() {
+  const audioControl = document.querySelector('.audio-control');
+  if (audioControl) {
+    audioControl.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+    audioControl.title = "Error al cargar el audio";
+  }
+}
+
+function mostrarAlertaAudio() {
+  try {
+    const contenedor = document.createElement('div');
+    contenedor.className = 'alerta-audio';
+    contenedor.innerHTML = `
+      <p>El navegador bloqueó el audio. Por favor:</p>
+      <ol>
+        <li>Haz clic en el icono del escudo en la barra de direcciones</li>
+        <li>Selecciona "Desactivar protecciones para este sitio"</li>
+        <li>Recarga la página</li>
+      </ol>
+    `;
+    document.body.appendChild(contenedor);
+    setTimeout(() => contenedor.remove(), 10000);
+  } catch (error) {
+    console.error("Error al mostrar alerta:", error);
+  }
+}
+
+function precargarImagenes() {
+  const imagenes = [
+    'assets/cris.jpg',
+    'assets/comida1.jpg',
+    'assets/comida2.jpg',
+    'assets/comida3.jpg',
+    'assets/actividad1.jpg',
+    'assets/actividad2.jpg'
+  ];
   
-  // Ajustar imagen inicial después de un breve retraso
-  setTimeout(ajustarImagenInicial, 100);
+  imagenes.forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
+}
+
+// =============================================
+// FUNCIONES DEL CONTENIDO
+// =============================================
+
+function startCounter() {
+  try {
+    const target = new Date("2025-09-18T00:00:00");
+    const contador = document.getElementById("contador-text");
+    if (!contador) return;
+
+    const actualizarContador = () => {
+      const now = new Date();
+      const diff = target - now;
+      
+      if (diff < 0) {
+        contador.textContent = "¡Llegó el día!";
+        return;
+      }
+      
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      
+      contador.textContent = `Faltan ${d}d ${h}h ${m}m ${s}s para el viaje`;
+    };
+
+    actualizarContador();
+    setInterval(actualizarContador, 1000);
+  } catch (error) {
+    console.error("Error en startCounter:", error);
+  }
+}
+
+function generateCalendarLink() {
+  try {
+    const start = "20250918T090000Z", end = "20250921T180000Z";
+    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      "&text=Viaje%20en%20pareja" +
+      "&dates=" + start + "/" + end +
+      "&details=Viaje%20para%20disfrutar%20en%20Cork%20Valley" +
+      "&location=" + encodeURIComponent("http://corkvalley.es/");
+    
+    const link = document.getElementById("cal-link");
+    if (link) link.href = url;
+  } catch (error) {
+    console.error("Error en generateCalendarLink:", error);
+  }
+}
+
+function generateQr() {
+  try {
+    const pageUrl = window.location.href;
+    const qrImg = document.getElementById("qr-img");
+    if (qrImg) {
+      qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + 
+                 encodeURIComponent(pageUrl);
+    }
+  } catch (error) {
+    console.error("Error en generateQr:", error);
+  }
+}
+
+function mostrar(id) {
+  try {
+    document.querySelectorAll('.pantalla').forEach(s => s.classList.remove('activa'));
+    const seccion = document.getElementById(id);
+    if (seccion) {
+      seccion.classList.add('activa');
+      document.body.className = id;
+      actualizarBotones();
+    }
+  } catch (error) {
+    console.error("Error en mostrar:", error);
+  }
+}
+
+function actualizarBotones() {
+  try {
+    const nav = document.getElementById('botones-nav');
+    if (!nav) return;
+
+    const seccion = document.querySelector('.pantalla.activa');
+    if (!seccion) return;
+
+    let botones = [];
+    const seccionId = seccion.id;
+
+    if (seccionId === "inicio") {
+      botones = [
+        { id: "comidas", texto: "Comidas" },
+        { id: "actividades", texto: "Actividades" }
+      ];
+    } else if (seccionId === "comidas") {
+      botones = [
+        { id: "inicio", texto: "Inicio" },
+        { id: "actividades", texto: "Actividades" }
+      ];
+    } else if (seccionId === "actividades") {
+      botones = [
+        { id: "inicio", texto: "Inicio" },
+        { id: "comidas", texto: "Comidas" }
+      ];
+    }
+
+    nav.innerHTML = '';
+    botones.forEach(btn => {
+      const b = document.createElement("button");
+      b.textContent = btn.texto;
+      b.onclick = () => mostrar(btn.id);
+      nav.appendChild(b);
+    });
+  } catch (error) {
+    console.error("Error en actualizarBotones:", error);
+  }
+}
+
+function animarPrimeraCarga() {
+  try {
+    const partes = [
+      "h1", "#contador-text", "#inicio h2",
+      ".mapa-ubicacion", "#cal-link", ".qr"
+    ];
+    
+    partes.forEach((selector, i) => {
+      const el = document.querySelector(selector);
+      if (el) {
+        el.classList.add("fade-in", `fade-delay-${i + 1}`);
+      }
+    });
+  } catch (error) {
+    console.error("Error en animarPrimeraCarga:", error);
+  }
+}
+
+function ajustarImagenInicial() {
+  try {
+    const fotoContainer = document.querySelector('.foto-inicial-container');
+    if (fotoContainer) {
+      const containerWidth = fotoContainer.offsetWidth;
+      const containerHeight = fotoContainer.offsetHeight;
+      const foto = document.querySelector('.foto-inicial');
+      
+      if (foto) {
+        foto.style.maxWidth = containerWidth + 'px';
+        foto.style.maxHeight = containerHeight + 'px';
+      }
+    }
+  } catch (error) {
+    console.error("Error en ajustarImagenInicial:", error);
+  }
+}
+
+function iniciarCorazones() {
+  try {
+    tsParticles.load("confetti-bg", {
+      fullScreen: { enable: true, zIndex: 1 },
+      particles: {
+        number: { value: 80 },
+        shape: { 
+          type: "char", 
+          character: { 
+            value: ["❤", "✨", "🎉", "🎁"], 
+            font: "Verdana", 
+            style: "", 
+            weight: "400" 
+          } 
+        },
+        color: { value: ["#FF69B4", "#FFD700", "#FF1493", "#00BFFF"] },
+        opacity: { value: 0.7 },
+        size: { value: 16 },
+        move: { enable: true, direction: "bottom", speed: 3 }
+      }
+    });
+  } catch (error) {
+    console.error("Error en iniciarCorazones:", error);
+  }
+}
+
+// =============================================
+// INICIALIZACIÓN
+// =============================================
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    // Configurar el reajuste de imagen al cambiar tamaño
+    window.addEventListener('resize', ajustarImagenInicial);
+    
+    // Ajustar imagen inicial después de un breve retraso
+    setTimeout(() => {
+      ajustarImagenInicial();
+      
+      // Iniciar la experiencia después de cargar los recursos
+      setTimeout(init, 300);
+    }, 100);
+    
+  } catch (error) {
+    console.error("Error en DOMContentLoaded:", error);
+  }
 });
