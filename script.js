@@ -113,3 +113,8 @@ function animarPrimeraCarga() {
     }
   });
 }
+
+function cerrarModal() {
+  const modal = document.getElementById('modal-inicio');
+  modal.style.display = 'none';
+}
