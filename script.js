@@ -38,10 +38,17 @@ function mostrar(id){
   actualizarBotones();
 }
 
-function toggleAudio(){
-  const a=document.getElementById('audio');
-  a.paused? a.play(): a.pause();
+function toggleAudio() {
+  const audio = document.getElementById('audio');
+  if (audio.paused) {
+    audio.play().catch(e => {
+      console.warn("Autoplay bloqueado, necesita interacción del usuario.");
+    });
+  } else {
+    audio.pause();
+  }
 }
+
 
 function startCounter(){
   const target = new Date("2025-09-18T00:00:00");
