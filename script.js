@@ -1,142 +1,150 @@
-// =============================================
-// VARIABLES GLOBALES
-// =============================================
-let audioPermitido = false;
-let audio = null;
-let particulasIniciadas = false;
-let intervaloContador = null;
+function init(){
+  startCounter();
+  generateCalendarLink();
+  generateQr();
+  actualizarBotones();
+  animarPrimeraCarga();
+}
 
-// =============================================
-// FUNCIONES DE AUDIO
-// =============================================
+function iniciarCorazones() {
+  tsParticles.load("confetti-bg", {
+    fullScreen:{enable:true,zIndex:1},
+    particles:{
+      number:{value:80},
+      shape:{type:"char", character:{value:"❤", font:"Verdana", style:"", weight:"400"}},
+      color:{value:"#FF69B4"},
+      opacity:{value:0.7},
+      size:{value:16},
+      move:{enable:true, direction:"bottom", speed:3}
+    }
+  });
+}
 
-// Variables globales de audio
-let audioPermitido = false;
-let audio = null;
-let audioCargado = false;
+function empezarSorpresa() {
+  const pantalla = document.getElementById("pantalla-inicial");
+  pantalla.style.opacity = 0;
+  setTimeout(() => {
+    pantalla.style.display = "none";
+    document.querySelector(".tarjeta").style.display = "block";
+    iniciarCorazones();
+    init();
+  }, 800);
+}
 
-function initAudio() {
-  if (!audio) {
-    audio = new Audio();
-    audio.loop = true;
-    audio.volume = 1.0; // Volumen al máximo inicialmente
-    audio.preload = 'auto';
-    
-    // Fuentes de audio (MP3 y OGG para máxima compatibilidad)
-    const sourceMP3 = document.createElement('source');
-    sourceMP3.src = 'assets/music.mp3';
-    sourceMP3.type = 'audio/mpeg';
-    
-    const sourceOGG = document.createElement('source');
-    sourceOGG.src = 'assets/music.ogg';
-    sourceOGG.type = 'audio/ogg';
-    
-    audio.appendChild(sourceMP3);
-    audio.appendChild(sourceOGG);
-    
-    // Eventos para manejar la carga del audio
-    audio.addEventListener('canplaythrough', () => {
-      audioCargado = true;
-      console.log("Audio cargado y listo para reproducir");
-    });
-    
-    audio.addEventListener('error', (e) => {
-      console.error("Error en el audio:", e);
-      mostrarErrorAudio();
-    });
-  }
+function mostrar(id){
+  document.querySelectorAll('.pantalla').forEach(s=>s.classList.remove('activa'));
+  document.getElementById(id).classList.add('activa');
+  document.body.className = id;
+  actualizarBotones();
 }
 
 function toggleAudio() {
-  try {
-    if (!audio) initAudio();
+  const audio = document.getElementById('audio');
+  const icon = document.querySelector('.audio-control i');
+  
+  if (audio.paused) {
+    const playPromise = audio.play();
     
-    const icon = document.querySelector('.audio-control i');
-    const audioControl = document.querySelector('.audio-control');
-    
-    // Efecto visual
-    audioControl.classList.add('pulsando');
-    setTimeout(() => audioControl.classList.remove('pulsando'), 200);
-    
-    if (audio.paused) {
-      audioPermitido = true;
-      
-      // Intenta reproducir solo si el audio está cargado
-      if (audioCargado) {
-        const playPromise = audio.play();
-        
-        if (playPromise !== undefined) {
-          playPromise
-            .then(_ => {
-              icon.classList.remove('fa-music');
-              icon.classList.add('fa-pause');
-              console.log("Reproduciendo audio");
-            })
-            .catch(error => {
-              console.error("Error al reproducir:", error);
-              mostrarAlertaAudio();
-            });
-        }
-      } else {
-        console.log("Audio aún no está cargado completamente");
-        audio.load(); // Forzar carga si no está listo
-      }
-    } else {
-      audio.pause();
-      icon.classList.remove('fa-pause');
-      icon.classList.add('fa-music');
+    if (playPromise !== undefined) {
+      playPromise.then(_ => {
+        icon.classList.remove('fa-music');
+        icon.classList.add('fa-pause');
+      }).catch(error => {
+        console.log("Error al reproducir audio:", error);
+      });
     }
-  } catch (error) {
-    console.error("Error en toggleAudio:", error);
+  } else {
+    audio.pause();
+    icon.classList.remove('fa-pause');
+    icon.classList.add('fa-music');
   }
 }
 
-// =============================================
-// FUNCIONES DEL CONTADOR
-// =============================================
-
-function startCounter() {
-  try {
-    // Limpiar intervalo previo si existe
-    if (intervaloContador) {
-      clearInterval(intervaloContador);
+function startCounter(){
+  const target = new Date("2025-09-18T00:00:00");
+  setInterval(()=>{
+    const now = new Date();
+    const diff = target - now;
+    
+    if (diff < 0) {
+      document.getElementById("contador-text").textContent = "¡Llegó el día!";
+      return;
     }
-
-    const target = new Date("2025-09-18T00:00:00");
-    const contador = document.getElementById("contador-text");
-    if (!contador) return;
-
-    const actualizarContador = () => {
-      const now = new Date();
-      const diff = target - now;
-      
-      if (diff < 0) {
-        contador.textContent = "¡Llegó el día!";
-        clearInterval(intervaloContador);
-        return;
-      }
-      
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      
-      contador.textContent = `Faltan ${d}d ${h}h ${m}m ${s}s para el viaje`;
-    };
-
-    actualizarContador();
-    intervaloContador = setInterval(actualizarContador, 1000);
-  } catch (error) {
-    console.error("Error en startCounter:", error);
-  }
+    
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    
+    document.getElementById("contador-text").textContent = 
+      `Faltan ${d}d ${h}h ${m}m ${s}s para el viaje`;
+  }, 1000);
 }
 
-// =============================================
-// FUNCIONES DE INTERFAZ
-// =============================================
+function generateCalendarLink(){
+  const start = "20250918T090000Z", end = "20250921T180000Z";
+  const url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+    "&text=Viaje%20en%20pareja" +
+    "&dates=" + start + "/" + end +
+    "&details=Viaje%20para%20disfrutar%20en%20Cork%20Valley" +
+    "&location=" + encodeURIComponent("http://corkvalley.es/");
+  document.getElementById("cal-link").href = url;
+}
 
-function ajustarImagenInicial() {
-  try {
+function generateQr(){
+  const pageUrl = window.location.href;
+  document.getElementById("qr-img").src = 
+    "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + 
+    encodeURIComponent(pageUrl);
+}
+
+function actualizarBotones() {
+  const nav = document.getElementById('botones-nav');
+  const seccion = document.querySelector('.pantalla.activa').id;
+  let botones = [];
+
+  if (seccion === "inicio") {
+    botones = [
+      { id: "comidas", texto: "Comidas" },
+      { id: "actividades", texto: "Actividades" }
+    ];
+  } else if (seccion === "comidas") {
+    botones = [
+      { id: "inicio", texto: "Inicio" },
+      { id: "actividades", texto: "Actividades" }
+    ];
+  } else if (seccion === "actividades") {
+    botones = [
+      { id: "inicio", texto: "Inicio" },
+      { id: "comidas", texto: "Comidas" }
+    ];
+  }
+
+  nav.innerHTML = '';
+  botones.forEach(btn => {
+    const b = document.createElement("button");
+    b.textContent = btn.texto;
+    b.onclick = () => mostrar(btn.id);
+    nav.appendChild(b);
+  });
+}
+
+function animarPrimeraCarga() {
+  const partes = [
+    "h1", "#contador-text", "#inicio h2",
+    ".mapa-ubicacion", "#cal-link", ".qr"
+  ];
+  
+  partes.forEach((selector, i) => {
+    const el = document.querySelector(selector);
+    if (el) {
+      el.classList.add("fade-in", `fade-delay-${i + 1}`);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  window.addEventListener('resize', function() {
     const fotoContainer = document.querySelector('.foto-inicial-container');
     if (fotoContainer) {
       const containerWidth = fotoContainer.offsetWidth;
@@ -148,234 +156,7 @@ function ajustarImagenInicial() {
         foto.style.maxHeight = containerHeight + 'px';
       }
     }
-  } catch (error) {
-    console.error("Error en ajustarImagenInicial:", error);
-  }
-}
-
-function animarPrimeraCarga() {
-  try {
-    const partes = [
-      "h1", "#contador-text", "#inicio h2",
-      ".mapa-ubicacion", "#cal-link", ".qr"
-    ];
-    
-    partes.forEach((selector, i) => {
-      const el = document.querySelector(selector);
-      if (el) {
-        el.classList.add("fade-in", `fade-delay-${i + 1}`);
-      }
-    });
-  } catch (error) {
-    console.error("Error en animarPrimeraCarga:", error);
-  }
-}
-
-function mostrar(id) {
-  try {
-    document.querySelectorAll('.pantalla').forEach(s => s.classList.remove('activa'));
-    const seccion = document.getElementById(id);
-    if (seccion) {
-      seccion.classList.add('activa');
-      document.body.className = id;
-      actualizarBotones();
-    }
-  } catch (error) {
-    console.error("Error en mostrar:", error);
-  }
-}
-
-function actualizarBotones() {
-  try {
-    const nav = document.getElementById('botones-nav');
-    if (!nav) return;
-
-    const seccion = document.querySelector('.pantalla.activa');
-    if (!seccion) return;
-
-    let botones = [];
-    const seccionId = seccion.id;
-
-    if (seccionId === "inicio") {
-      botones = [
-        { id: "comidas", texto: "Comidas" },
-        { id: "actividades", texto: "Actividades" }
-      ];
-    } else if (seccionId === "comidas") {
-      botones = [
-        { id: "inicio", texto: "Inicio" },
-        { id: "actividades", texto: "Actividades" }
-      ];
-    } else if (seccionId === "actividades") {
-      botones = [
-        { id: "inicio", texto: "Inicio" },
-        { id: "comidas", texto: "Comidas" }
-      ];
-    }
-
-    nav.innerHTML = '';
-    botones.forEach(btn => {
-      const b = document.createElement("button");
-      b.textContent = btn.texto;
-      b.onclick = () => mostrar(btn.id);
-      nav.appendChild(b);
-    });
-  } catch (error) {
-    console.error("Error en actualizarBotones:", error);
-  }
-}
-
-// =============================================
-// FUNCIONES DEL MAPA
-// =============================================
-
-function generateCalendarLink() {
-  try {
-    const start = "20250918T090000Z", end = "20250921T180000Z";
-    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
-      "&text=Viaje%20en%20pareja" +
-      "&dates=" + start + "/" + end +
-      "&details=Viaje%20para%20disfrutar%20en%20Cork%20Valley" +
-      "&location=" + encodeURIComponent("http://corkvalley.es/");
-    
-    const link = document.getElementById("cal-link");
-    if (link) link.href = url;
-  } catch (error) {
-    console.error("Error en generateCalendarLink:", error);
-  }
-}
-
-function generateQr() {
-  try {
-    const pageUrl = window.location.href;
-    const qrImg = document.getElementById("qr-img");
-    if (qrImg) {
-      qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + 
-                 encodeURIComponent(pageUrl);
-    }
-  } catch (error) {
-    console.error("Error en generateQr:", error);
-  }
-}
-
-// =============================================
-// FUNCIONES DE PARTICULAS
-// =============================================
-
-function iniciarCorazones() {
-  try {
-    if (particulasIniciadas) return;
-    
-    tsParticles.load("confetti-bg", {
-      fullScreen: { enable: true, zIndex: 1 },
-      particles: {
-        number: { value: 80 },
-        shape: { 
-          type: "char", 
-          character: { 
-            value: ["❤", "✨", "🎉", "🎁"], 
-            font: "Verdana", 
-            style: "", 
-            weight: "400" 
-          } 
-        },
-        color: { value: ["#FF69B4", "#FFD700", "#FF1493", "#00BFFF"] },
-        opacity: { value: 0.7 },
-        size: { value: 16 },
-        move: { enable: true, direction: "bottom", speed: 3 }
-      }
-    });
-    
-    particulasIniciadas = true;
-  } catch (error) {
-    console.error("Error en iniciarCorazones:", error);
-  }
-}
-
-// =============================================
-// FUNCIONES DE INICIALIZACIÓN
-// =============================================
-
-function precargarImagenes() {
-  try {
-    const imagenes = [
-      'assets/cris.jpg',
-      'assets/comida1.jpg',
-      'assets/comida2.jpg',
-      'assets/comida3.jpg',
-      'assets/actividad1.jpg',
-      'assets/actividad2.jpg'
-    ];
-    
-    imagenes.forEach(src => {
-      const img = new Image();
-      img.src = src;
-    });
-  } catch (error) {
-    console.error("Error en precargarImagenes:", error);
-  }
-}
-
-function init() {
-  try {
-    // Inicializar componentes
-    initAudio();
-    startCounter();
-    generateCalendarLink();
-    generateQr();
-    actualizarBotones();
-    animarPrimeraCarga();
-    precargarImagenes();
-    
-    // Configurar eventos
-    const audioControl = document.querySelector('.audio-control');
-    if (audioControl) {
-      audioControl.style.display = 'flex';
-      audioControl.addEventListener('click', toggleAudio);
-    }
-    
-  } catch (error) {
-    console.error("Error en init:", error);
-  }
-}
-
-function empezarSorpresa() {
-  try {
-    const pantalla = document.getElementById("pantalla-inicial");
-    if (!pantalla) return;
-    
-    pantalla.style.opacity = 0;
-    setTimeout(() => {
-      pantalla.style.display = "none";
-      const tarjeta = document.querySelector(".tarjeta");
-      if (tarjeta) {
-        tarjeta.style.display = "block";
-        iniciarCorazones();
-      }
-      init();
-    }, 800);
-  } catch (error) {
-    console.error("Error en empezarSorpresa:", error);
-  }
-}
-
-// =============================================
-// INICIALIZACIÓN DE LA PÁGINA
-// =============================================
-document.addEventListener('DOMContentLoaded', function() {
-  try {
-    // Configurar el reajuste de imagen al cambiar tamaño
-    window.addEventListener('resize', ajustarImagenInicial);
-    
-    // Ajustar imagen inicial después de un breve retraso
-    setTimeout(() => {
-      ajustarImagenInicial();
-      
-      // Iniciar la experiencia después de cargar los recursos
-      setTimeout(init, 300);
-    }, 100);
-    
-  } catch (error) {
-    console.error("Error en DOMContentLoaded:", error);
-  }
+  });
+  
+  setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
 });
