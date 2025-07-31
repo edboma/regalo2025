@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Regalo para Cris</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
 </head>
@@ -11,14 +12,16 @@
   <div id="confetti-bg"></div>
 
   <div id="pantalla-inicial" class="pantalla-inicial">
-    <img src="assets/cris.jpg" alt="Cris" class="foto-inicial" />
+    <div class="foto-inicial-container">
+      <img src="assets/cris.jpg" alt="Cris" class="foto-inicial pulse">
+    </div>
     <h2>Prepárate, que viene el regalo...<br>esto es solo el principio 💫</h2>
     <button onclick="empezarSorpresa()">Ver el regalo</button>
   </div>
 
-  <main class="tarjeta" style="display:none">
+  <main class="tarjeta">
     <h1>¡Feliz Cumpleaños, Cris! 🎉</h1>
-    <p id="contador-text"></p>
+    <p id="contador-text">Cargando cuenta regresiva...</p>
 
     <nav id="botones-nav"></nav>
 
@@ -28,21 +31,16 @@
       <div class="mapa-ubicacion">
         <iframe 
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3072.811213755639!2d-4.523495724830873!3d39.63145437157658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd6a8d6bc97dc797%3A0x863fbe114a0ed92e!2sCork%20Valley!5e0!3m2!1ses!2ses!4v1753825684849!5m2!1ses!2ses"
-          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
         </iframe>
       </div>
       <p><a href="http://corkvalley.es/" target="_blank">Ver alojamiento</a></p>
-      <a id="cal-link" href="#" target="_blank">📅 Añadir al Google Calendar</a>
+      <a id="cal-link" href="#" target="_blank" class="fade-in">📅 Añadir al Google Calendar</a>
 
-      <div class="qr">
+      <div class="qr fade-in">
         <p>Escanea para abrir en tu móvil:</p>
         <img id="qr-img" src="assets/qr-placeholder.png" alt="QR para abrir en el móvil"/>
       </div>
-
-      <button onclick="toggleAudio()">▶️ Música de fondo</button>
-      <audio id="audio" loop>
-        <source src="assets/music.mp3" type="audio/mp3" />
-      </audio>
     </section>
 
     <section id="comidas" class="pantalla">
@@ -75,6 +73,15 @@
       <a href="https://upsell.whistle.cloudbeds.com/227547/products" target="_blank">Ver todas las actividades</a>
     </section>
   </main>
+  
+  <div class="audio-control" onclick="toggleAudio()">
+    <i class="fas fa-music"></i>
+  </div>
+  
+  <audio id="audio" loop>
+    <source src="assets/music.mp3" type="audio/mp3" />
+  </audio>
+
   <script src="script.js"></script>
 </body>
 </html>
