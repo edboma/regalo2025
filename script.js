@@ -1,16 +1,41 @@
 function init(){
-  tsParticles.load("confetti-bg", {
-    fullScreen:{enable:true,zIndex:1}, particles:{ number:{value:80}, shape:{type:"circle"}, color:{value:["#FFC700","#FF0000","#2E3192","#41BBC7"]}, opacity:{value:0.9}, size:{value:5}, move:{enable:true,direction:"bottom",speed:4}}
-  });
   startCounter();
   generateCalendarLink();
   generateQr();
+  actualizarBotones();
+  animarPrimeraCarga();
+}
+
+function iniciarCorazones() {
+  tsParticles.load("confetti-bg", {
+    fullScreen:{enable:true,zIndex:1},
+    particles:{
+      number:{value:50},
+      shape:{type:"char", character:{value:"❤", font:"Verdana", style:"", weight:"400"}},
+      color:{value:"#FF69B4"},
+      opacity:{value:0.7},
+      size:{value:14},
+      move:{enable:true, direction:"bottom", speed:2}
+    }
+  });
+}
+
+function empezarSorpresa() {
+  const pantalla = document.getElementById("pantalla-inicial");
+  pantalla.style.opacity = 0;
+  setTimeout(() => {
+    pantalla.style.display = "none";
+    document.querySelector(".tarjeta").style.display = "block";
+    iniciarCorazones();
+    init();
+  }, 800);
 }
 
 function mostrar(id){
   document.querySelectorAll('.pantalla').forEach(s=>s.classList.remove('activa'));
   document.getElementById(id).classList.add('activa');
   document.body.className = id;
+  actualizarBotones();
 }
 
 function toggleAudio(){
@@ -75,46 +100,16 @@ function actualizarBotones() {
   });
 }
 
-// Llama a actualizar los botones cada vez que cambias de sección
-const oldMostrar = mostrar;
-mostrar = function(id) {
-  document.querySelectorAll('.pantalla').forEach(s => s.classList.remove('activa'));
-  document.getElementById(id).classList.add('activa');
-  document.body.className = id;
-  actualizarBotones();
-};
-
-// También llama a actualizarBotones al cargar la página
-window.addEventListener('DOMContentLoaded', () => {
-  actualizarBotones();
-});
-
 function animarPrimeraCarga() {
   const partes = [
-    "h1",                // ¡Feliz Cumpleaños, Cris!
-    "#contador-text",    // contador
-    "#inicio h2",        // 🧳 Viaje en pareja
-    ".mapa-ubicacion",   // mapa
-    "#cal-link",         // calendario
-    ".qr",               // QR
-    "button[onclick='toggleAudio()']" // botón música
+    "h1", "#contador-text", "#inicio h2",
+    ".mapa-ubicacion", "#cal-link", ".qr", 
+    "button[onclick='toggleAudio()']"
   ];
-
   partes.forEach((selector, i) => {
     const el = document.querySelector(selector);
     if (el) {
       el.classList.add("fade-in", `fade-delay-${i + 1}`);
     }
   });
-}
-
-// Al cargar la página, aplicar animaciones
-window.addEventListener('DOMContentLoaded', () => {
-  actualizarBotones();
-  animarPrimeraCarga();
-});
-
-function mostrarSorpresa() {
-  alert("TE QUIERO CUCHIPU 🎉💖");
-  // O podrías mostrar una foto especial, mensaje, etc.
 }

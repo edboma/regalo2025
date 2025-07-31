@@ -7,21 +7,23 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
 </head>
-<body onload="init()">
+<body>
   <div id="confetti-bg"></div>
-  <main class="tarjeta">
+
+  <div id="pantalla-inicial" class="pantalla-inicial">
+    <img src="assets/cris.jpg" alt="Cris" class="foto-inicial" />
+    <h2>Prepárate, que viene el regalo...<br>esto es solo el principio 💫</h2>
+    <button onclick="empezarSorpresa()">Ver el regalo</button>
+  </div>
+
+  <main class="tarjeta" style="display:none">
     <h1>¡Feliz Cumpleaños, Cris! 🎉</h1>
     <p id="contador-text"></p>
 
-    <nav id="botones-nav">
-      <button onclick="mostrar('inicio')">Inicio</button>
-      <button onclick="mostrar('comidas')">Comidas</button>
-      <button onclick="mostrar('actividades')">Actividades</button>
-    </nav>
+    <nav id="botones-nav"></nav>
 
     <section id="inicio" class="pantalla activa">
       <h2>🧳 Viaje en pareja</h2>
-      <button id="boton-secreto" onclick="mostrarSorpresa()">🎁</button>
       <p>Reserva del <strong>18 al 21 de septiembre de 2025</strong></p>
       <div class="mapa-ubicacion">
         <iframe 
@@ -30,7 +32,6 @@
         </iframe>
       </div>
       <p><a href="http://corkvalley.es/" target="_blank">Ver alojamiento</a></p>
-
       <a id="cal-link" href="#" target="_blank">📅 Añadir al Google Calendar</a>
 
       <div class="qr">

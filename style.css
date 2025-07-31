@@ -5,7 +5,6 @@ button { padding:10px 20px; margin:10px; font-size:1rem; background:#f04e4e; col
 .pantalla { display:none; opacity:0; transform: translateY(30px); }
 .pantalla.activa { display:block; animation: fadeIn 0.8s forwards;}
 @keyframes fadeIn { to { opacity:1; transform: translateY(0); } }
-body.viaje { background:#e0f7ff; } body.comidas { background:#fff7e0; } body.actividades { background:#e0ffe0; } body.contador { background:#f0e0ff; }
 ul { text-align:left; display:inline-block; }
 .qr img { width:150px; margin-top:15px;}
 
@@ -36,39 +35,29 @@ ul { text-align:left; display:inline-block; }
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.fade-in {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: fadeInSection 1s forwards;
-}
-
-.fade-delay-1 { animation-delay: 0.5s; }
-.fade-delay-2 { animation-delay: 3.2s; }
-.fade-delay-3 { animation-delay: 5s; }
-.fade-delay-4 { animation-delay: 7.8s; }
-.fade-delay-5 { animation-delay: 10.5s; }
-
-@keyframes fadeInSection {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-#boton-secreto {
+.pantalla-inicial {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  font-size: 1.5rem;
-  z-index: 100;
-  opacity: 0.3;
-  transition: all 0.3s;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: #fff;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  transition: opacity 0.8s ease;
 }
 
-#boton-secreto:hover {
-  opacity: 1;
-  transform: scale(1.1) rotate(20deg);
+.foto-inicial {
+  width: 200px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  margin-bottom: 1.5rem;
+}
+
+.pantalla-inicial h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
 }
