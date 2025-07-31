@@ -1,57 +1,43 @@
 // =============================================
-// VARIABLES GLOBALES Y CONFIGURACIÓN INICIAL
+// VARIABLES GLOBALES
 // =============================================
 let audioPermitido = false;
 let audio = null;
 let particulasIniciadas = false;
+let intervaloContador = null;
 
 // =============================================
-// FUNCIONES PRINCIPALES
+// FUNCIONES DE AUDIO
 // =============================================
-
-function init() {
-  try {
-    // Inicializar componentes
-    initAudio();
-    startCounter();
-    generateCalendarLink();
-    generateQr();
-    actualizarBotones();
-    animarPrimeraCarga();
-    
-    // Configurar eventos
-    const audioControl = document.querySelector('.audio-control');
-    if (audioControl) {
-      audioControl.addEventListener('click', toggleAudio);
-      audioControl.style.display = 'flex'; // Mostrar control de audio
-    }
-    
-    // Precargar recursos
-    precargarImagenes();
-    
-  } catch (error) {
-    console.error("Error en init:", error);
-  }
-}
 
 function initAudio() {
-  if (!audio) {
-    try {
-      audio = new Audio('assets/music.mp3');
+  try {
+    if (!audio) {
+      audio = new Audio();
       audio.loop = true;
       audio.volume = 0.3;
       audio.preload = 'auto';
       
-      // Manejar errores de audio
+      // Fuentes de audio para mejor compatibilidad
+      const sourceMP3 = document.createElement('source');
+      sourceMP3.src = 'assets/music.mp3';
+      sourceMP3.type = 'audio/mpeg';
+      
+      const sourceOGG = document.createElement('source');
+      sourceOGG.src = 'assets/music.ogg';
+      sourceOGG.type = 'audio/ogg';
+      
+      audio.appendChild(sourceMP3);
+      audio.appendChild(sourceOGG);
+      
       audio.addEventListener('error', (e) => {
         console.error("Error en el audio:", e);
         mostrarErrorAudio();
       });
-      
-    } catch (error) {
-      console.error("Error al inicializar audio:", error);
-      mostrarErrorAudio();
     }
+  } catch (error) {
+    console.error("Error al inicializar audio:", error);
+    mostrarErrorAudio();
   }
 }
 
@@ -96,38 +82,16 @@ function toggleAudio() {
   }
 }
 
-function empezarSorpresa() {
-  try {
-    const pantalla = document.getElementById("pantalla-inicial");
-    if (!pantalla) return;
-    
-    pantalla.style.opacity = 0;
-    setTimeout(() => {
-      pantalla.style.display = "none";
-      const tarjeta = document.querySelector(".tarjeta");
-      if (tarjeta) {
-        tarjeta.style.display = "block";
-        if (!particulasIniciadas) {
-          iniciarCorazones();
-          particulasIniciadas = true;
-        }
-      }
-      init();
-    }, 800);
-  } catch (error) {
-    console.error("Error en empezarSorpresa:", error);
-  }
-}
-
-// =============================================
-// FUNCIONES DE UTILIDAD
-// =============================================
-
 function mostrarErrorAudio() {
-  const audioControl = document.querySelector('.audio-control');
-  if (audioControl) {
-    audioControl.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-    audioControl.title = "Error al cargar el audio";
+  try {
+    const audioControl = document.querySelector('.audio-control');
+    if (audioControl) {
+      audioControl.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+      audioControl.title = "Error al cargar el audio";
+      audioControl.onclick = null;
+    }
+  } catch (error) {
+    console.error("Error al mostrar error de audio:", error);
   }
 }
 
@@ -136,42 +100,35 @@ function mostrarAlertaAudio() {
     const contenedor = document.createElement('div');
     contenedor.className = 'alerta-audio';
     contenedor.innerHTML = `
-      <p>El navegador bloqueó el audio. Por favor:</p>
+      <p>El navegador no puede reproducir el audio. Por favor:</p>
       <ol>
-        <li>Haz clic en el icono del escudo en la barra de direcciones</li>
-        <li>Selecciona "Desactivar protecciones para este sitio"</li>
-        <li>Recarga la página</li>
+        <li>Verifica que el archivo de audio exista en la carpeta assets</li>
+        <li>Prueba con otro navegador</li>
+        <li>Si usas Brave, haz clic en el icono del escudo y desactiva las protecciones</li>
       </ol>
     `;
     document.body.appendChild(contenedor);
-    setTimeout(() => contenedor.remove(), 10000);
+    setTimeout(() => {
+      if (contenedor.parentNode) {
+        contenedor.parentNode.removeChild(contenedor);
+      }
+    }, 10000);
   } catch (error) {
     console.error("Error al mostrar alerta:", error);
   }
 }
 
-function precargarImagenes() {
-  const imagenes = [
-    'assets/cris.jpg',
-    'assets/comida1.jpg',
-    'assets/comida2.jpg',
-    'assets/comida3.jpg',
-    'assets/actividad1.jpg',
-    'assets/actividad2.jpg'
-  ];
-  
-  imagenes.forEach(src => {
-    const img = new Image();
-    img.src = src;
-  });
-}
-
 // =============================================
-// FUNCIONES DEL CONTENIDO
+// FUNCIONES DEL CONTADOR
 // =============================================
 
 function startCounter() {
   try {
+    // Limpiar intervalo previo si existe
+    if (intervaloContador) {
+      clearInterval(intervaloContador);
+    }
+
     const target = new Date("2025-09-18T00:00:00");
     const contador = document.getElementById("contador-text");
     if (!contador) return;
@@ -182,6 +139,7 @@ function startCounter() {
       
       if (diff < 0) {
         contador.textContent = "¡Llegó el día!";
+        clearInterval(intervaloContador);
         return;
       }
       
@@ -194,38 +152,49 @@ function startCounter() {
     };
 
     actualizarContador();
-    setInterval(actualizarContador, 1000);
+    intervaloContador = setInterval(actualizarContador, 1000);
   } catch (error) {
     console.error("Error en startCounter:", error);
   }
 }
 
-function generateCalendarLink() {
+// =============================================
+// FUNCIONES DE INTERFAZ
+// =============================================
+
+function ajustarImagenInicial() {
   try {
-    const start = "20250918T090000Z", end = "20250921T180000Z";
-    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
-      "&text=Viaje%20en%20pareja" +
-      "&dates=" + start + "/" + end +
-      "&details=Viaje%20para%20disfrutar%20en%20Cork%20Valley" +
-      "&location=" + encodeURIComponent("http://corkvalley.es/");
-    
-    const link = document.getElementById("cal-link");
-    if (link) link.href = url;
+    const fotoContainer = document.querySelector('.foto-inicial-container');
+    if (fotoContainer) {
+      const containerWidth = fotoContainer.offsetWidth;
+      const containerHeight = fotoContainer.offsetHeight;
+      const foto = document.querySelector('.foto-inicial');
+      
+      if (foto) {
+        foto.style.maxWidth = containerWidth + 'px';
+        foto.style.maxHeight = containerHeight + 'px';
+      }
+    }
   } catch (error) {
-    console.error("Error en generateCalendarLink:", error);
+    console.error("Error en ajustarImagenInicial:", error);
   }
 }
 
-function generateQr() {
+function animarPrimeraCarga() {
   try {
-    const pageUrl = window.location.href;
-    const qrImg = document.getElementById("qr-img");
-    if (qrImg) {
-      qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + 
-                 encodeURIComponent(pageUrl);
-    }
+    const partes = [
+      "h1", "#contador-text", "#inicio h2",
+      ".mapa-ubicacion", "#cal-link", ".qr"
+    ];
+    
+    partes.forEach((selector, i) => {
+      const el = document.querySelector(selector);
+      if (el) {
+        el.classList.add("fade-in", `fade-delay-${i + 1}`);
+      }
+    });
   } catch (error) {
-    console.error("Error en generateQr:", error);
+    console.error("Error en animarPrimeraCarga:", error);
   }
 }
 
@@ -283,44 +252,47 @@ function actualizarBotones() {
   }
 }
 
-function animarPrimeraCarga() {
+// =============================================
+// FUNCIONES DEL MAPA
+// =============================================
+
+function generateCalendarLink() {
   try {
-    const partes = [
-      "h1", "#contador-text", "#inicio h2",
-      ".mapa-ubicacion", "#cal-link", ".qr"
-    ];
+    const start = "20250918T090000Z", end = "20250921T180000Z";
+    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      "&text=Viaje%20en%20pareja" +
+      "&dates=" + start + "/" + end +
+      "&details=Viaje%20para%20disfrutar%20en%20Cork%20Valley" +
+      "&location=" + encodeURIComponent("http://corkvalley.es/");
     
-    partes.forEach((selector, i) => {
-      const el = document.querySelector(selector);
-      if (el) {
-        el.classList.add("fade-in", `fade-delay-${i + 1}`);
-      }
-    });
+    const link = document.getElementById("cal-link");
+    if (link) link.href = url;
   } catch (error) {
-    console.error("Error en animarPrimeraCarga:", error);
+    console.error("Error en generateCalendarLink:", error);
   }
 }
 
-function ajustarImagenInicial() {
+function generateQr() {
   try {
-    const fotoContainer = document.querySelector('.foto-inicial-container');
-    if (fotoContainer) {
-      const containerWidth = fotoContainer.offsetWidth;
-      const containerHeight = fotoContainer.offsetHeight;
-      const foto = document.querySelector('.foto-inicial');
-      
-      if (foto) {
-        foto.style.maxWidth = containerWidth + 'px';
-        foto.style.maxHeight = containerHeight + 'px';
-      }
+    const pageUrl = window.location.href;
+    const qrImg = document.getElementById("qr-img");
+    if (qrImg) {
+      qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + 
+                 encodeURIComponent(pageUrl);
     }
   } catch (error) {
-    console.error("Error en ajustarImagenInicial:", error);
+    console.error("Error en generateQr:", error);
   }
 }
+
+// =============================================
+// FUNCIONES DE PARTICULAS
+// =============================================
 
 function iniciarCorazones() {
   try {
+    if (particulasIniciadas) return;
+    
     tsParticles.load("confetti-bg", {
       fullScreen: { enable: true, zIndex: 1 },
       particles: {
@@ -340,13 +312,82 @@ function iniciarCorazones() {
         move: { enable: true, direction: "bottom", speed: 3 }
       }
     });
+    
+    particulasIniciadas = true;
   } catch (error) {
     console.error("Error en iniciarCorazones:", error);
   }
 }
 
 // =============================================
-// INICIALIZACIÓN
+// FUNCIONES DE INICIALIZACIÓN
+// =============================================
+
+function precargarImagenes() {
+  try {
+    const imagenes = [
+      'assets/cris.jpg',
+      'assets/comida1.jpg',
+      'assets/comida2.jpg',
+      'assets/comida3.jpg',
+      'assets/actividad1.jpg',
+      'assets/actividad2.jpg'
+    ];
+    
+    imagenes.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  } catch (error) {
+    console.error("Error en precargarImagenes:", error);
+  }
+}
+
+function init() {
+  try {
+    // Inicializar componentes
+    initAudio();
+    startCounter();
+    generateCalendarLink();
+    generateQr();
+    actualizarBotones();
+    animarPrimeraCarga();
+    precargarImagenes();
+    
+    // Configurar eventos
+    const audioControl = document.querySelector('.audio-control');
+    if (audioControl) {
+      audioControl.style.display = 'flex';
+      audioControl.addEventListener('click', toggleAudio);
+    }
+    
+  } catch (error) {
+    console.error("Error en init:", error);
+  }
+}
+
+function empezarSorpresa() {
+  try {
+    const pantalla = document.getElementById("pantalla-inicial");
+    if (!pantalla) return;
+    
+    pantalla.style.opacity = 0;
+    setTimeout(() => {
+      pantalla.style.display = "none";
+      const tarjeta = document.querySelector(".tarjeta");
+      if (tarjeta) {
+        tarjeta.style.display = "block";
+        iniciarCorazones();
+      }
+      init();
+    }, 800);
+  } catch (error) {
+    console.error("Error en empezarSorpresa:", error);
+  }
+}
+
+// =============================================
+// INICIALIZACIÓN DE LA PÁGINA
 // =============================================
 document.addEventListener('DOMContentLoaded', function() {
   try {
