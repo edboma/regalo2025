@@ -10,67 +10,76 @@ let intervaloContador = null;
 // FUNCIONES DE AUDIO
 // =============================================
 
+// Variables globales de audio
+let audioPermitido = false;
+let audio = null;
+let audioCargado = false;
+
 function initAudio() {
-  try {
-    if (!audio) {
-      audio = new Audio();
-      audio.loop = true;
-      audio.volume = 0.3;
-      audio.preload = 'auto';
-      
-      // Fuentes de audio para mejor compatibilidad
-      const sourceMP3 = document.createElement('source');
-      sourceMP3.src = 'assets/music.mp3';
-      sourceMP3.type = 'audio/mpeg';
-      
-      const sourceOGG = document.createElement('source');
-      sourceOGG.src = 'assets/music.ogg';
-      sourceOGG.type = 'audio/ogg';
-      
-      audio.appendChild(sourceMP3);
-      audio.appendChild(sourceOGG);
-      
-      audio.addEventListener('error', (e) => {
-        console.error("Error en el audio:", e);
-        mostrarErrorAudio();
-      });
-    }
-  } catch (error) {
-    console.error("Error al inicializar audio:", error);
-    mostrarErrorAudio();
+  if (!audio) {
+    audio = new Audio();
+    audio.loop = true;
+    audio.volume = 1.0; // Volumen al máximo inicialmente
+    audio.preload = 'auto';
+    
+    // Fuentes de audio (MP3 y OGG para máxima compatibilidad)
+    const sourceMP3 = document.createElement('source');
+    sourceMP3.src = 'assets/music.mp3';
+    sourceMP3.type = 'audio/mpeg';
+    
+    const sourceOGG = document.createElement('source');
+    sourceOGG.src = 'assets/music.ogg';
+    sourceOGG.type = 'audio/ogg';
+    
+    audio.appendChild(sourceMP3);
+    audio.appendChild(sourceOGG);
+    
+    // Eventos para manejar la carga del audio
+    audio.addEventListener('canplaythrough', () => {
+      audioCargado = true;
+      console.log("Audio cargado y listo para reproducir");
+    });
+    
+    audio.addEventListener('error', (e) => {
+      console.error("Error en el audio:", e);
+      mostrarErrorAudio();
+    });
   }
 }
 
 function toggleAudio() {
   try {
     if (!audio) initAudio();
-    if (!audio) return;
-
+    
     const icon = document.querySelector('.audio-control i');
     const audioControl = document.querySelector('.audio-control');
     
-    if (!icon || !audioControl) return;
-
     // Efecto visual
     audioControl.classList.add('pulsando');
     setTimeout(() => audioControl.classList.remove('pulsando'), 200);
     
     if (audio.paused) {
       audioPermitido = true;
-      const playPromise = audio.play();
       
-      if (playPromise !== undefined) {
-        playPromise
-          .then(_ => {
-            icon.classList.remove('fa-music');
-            icon.classList.add('fa-pause');
-          })
-          .catch(error => {
-            console.error("Error al reproducir:", error);
-            if (audioPermitido) {
+      // Intenta reproducir solo si el audio está cargado
+      if (audioCargado) {
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+          playPromise
+            .then(_ => {
+              icon.classList.remove('fa-music');
+              icon.classList.add('fa-pause');
+              console.log("Reproduciendo audio");
+            })
+            .catch(error => {
+              console.error("Error al reproducir:", error);
               mostrarAlertaAudio();
-            }
-          });
+            });
+        }
+      } else {
+        console.log("Audio aún no está cargado completamente");
+        audio.load(); // Forzar carga si no está listo
       }
     } else {
       audio.pause();
@@ -79,42 +88,6 @@ function toggleAudio() {
     }
   } catch (error) {
     console.error("Error en toggleAudio:", error);
-  }
-}
-
-function mostrarErrorAudio() {
-  try {
-    const audioControl = document.querySelector('.audio-control');
-    if (audioControl) {
-      audioControl.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-      audioControl.title = "Error al cargar el audio";
-      audioControl.onclick = null;
-    }
-  } catch (error) {
-    console.error("Error al mostrar error de audio:", error);
-  }
-}
-
-function mostrarAlertaAudio() {
-  try {
-    const contenedor = document.createElement('div');
-    contenedor.className = 'alerta-audio';
-    contenedor.innerHTML = `
-      <p>El navegador no puede reproducir el audio. Por favor:</p>
-      <ol>
-        <li>Verifica que el archivo de audio exista en la carpeta assets</li>
-        <li>Prueba con otro navegador</li>
-        <li>Si usas Brave, haz clic en el icono del escudo y desactiva las protecciones</li>
-      </ol>
-    `;
-    document.body.appendChild(contenedor);
-    setTimeout(() => {
-      if (contenedor.parentNode) {
-        contenedor.parentNode.removeChild(contenedor);
-      }
-    }, 10000);
-  } catch (error) {
-    console.error("Error al mostrar alerta:", error);
   }
 }
 
