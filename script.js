@@ -10,12 +10,12 @@ function iniciarCorazones() {
   tsParticles.load("confetti-bg", {
     fullScreen:{enable:true,zIndex:1},
     particles:{
-      number:{value:50},
+      number:{value:80},
       shape:{type:"char", character:{value:"❤", font:"Verdana", style:"", weight:"400"}},
       color:{value:"#FF69B4"},
       opacity:{value:0.7},
-      size:{value:14},
-      move:{enable:true, direction:"bottom", speed:2}
+      size:{value:16},
+      move:{enable:true, direction:"bottom", speed:3}
     }
   });
 }
@@ -40,40 +40,62 @@ function mostrar(id){
 
 function toggleAudio() {
   const audio = document.getElementById('audio');
+  const icon = document.querySelector('.audio-control i');
+  
   if (audio.paused) {
-    audio.play().catch(e => {
-      console.warn("Autoplay bloqueado, necesita interacción del usuario.");
-    });
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+      playPromise.then(_ => {
+        icon.classList.remove('fa-music');
+        icon.classList.add('fa-pause');
+      }).catch(error => {
+        console.log("Error al reproducir audio:", error);
+      });
+    }
   } else {
     audio.pause();
+    icon.classList.remove('fa-pause');
+    icon.classList.add('fa-music');
   }
 }
-
 
 function startCounter(){
   const target = new Date("2025-09-18T00:00:00");
   setInterval(()=>{
-    const now=new Date(), diff=target-now;
-    if(diff<0) return document.getElementById("contador-text").textContent="¡Llegó el día!";
-    const d=Math.floor(diff/86400000), h=Math.floor(diff%86400000/3600000),
-          m=Math.floor(diff%3600000/60000), s=Math.floor(diff%60000/1000);
-    document.getElementById("contador-text").textContent=`Faltan ${d}d ${h}h ${m}m ${s}s para el viaje`;
-  },1000);
+    const now = new Date();
+    const diff = target - now;
+    
+    if (diff < 0) {
+      document.getElementById("contador-text").textContent = "¡Llegó el día!";
+      return;
+    }
+    
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    
+    document.getElementById("contador-text").textContent = 
+      `Faltan ${d}d ${h}h ${m}m ${s}s para el viaje`;
+  }, 1000);
 }
 
 function generateCalendarLink(){
-  const start="20250918T090000Z", end="20250921T180000Z";
-  const url="https://calendar.google.com/calendar/render?action=TEMPLATE"
-    +"&text=Viaje%20en%20pareja"
-    +"&dates="+start+"/"+end
-    +"&details=Viaje%20para%20disfrutar%20en%20Cork%20Valley"
-    +"&location="+encodeURIComponent("http://corkvalley.es/");
-  document.getElementById("cal-link").href=url;
+  const start = "20250918T090000Z", end = "20250921T180000Z";
+  const url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+    "&text=Viaje%20en%20pareja" +
+    "&dates=" + start + "/" + end +
+    "&details=Viaje%20para%20disfrutar%20en%20Cork%20Valley" +
+    "&location=" + encodeURIComponent("http://corkvalley.es/");
+  document.getElementById("cal-link").href = url;
 }
 
 function generateQr(){
-  const pageUrl=window.location.href;
-  document.getElementById("qr-img").src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+encodeURIComponent(pageUrl);
+  const pageUrl = window.location.href;
+  document.getElementById("qr-img").src = 
+    "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + 
+    encodeURIComponent(pageUrl);
 }
 
 function actualizarBotones() {
@@ -110,9 +132,9 @@ function actualizarBotones() {
 function animarPrimeraCarga() {
   const partes = [
     "h1", "#contador-text", "#inicio h2",
-    ".mapa-ubicacion", "#cal-link", ".qr", 
-    "button[onclick='toggleAudio()']"
+    ".mapa-ubicacion", "#cal-link", ".qr"
   ];
+  
   partes.forEach((selector, i) => {
     const el = document.querySelector(selector);
     if (el) {
@@ -120,3 +142,21 @@ function animarPrimeraCarga() {
     }
   });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  window.addEventListener('resize', function() {
+    const fotoContainer = document.querySelector('.foto-inicial-container');
+    if (fotoContainer) {
+      const containerWidth = fotoContainer.offsetWidth;
+      const containerHeight = fotoContainer.offsetHeight;
+      const foto = document.querySelector('.foto-inicial');
+      
+      if (foto) {
+        foto.style.maxWidth = containerWidth + 'px';
+        foto.style.maxHeight = containerHeight + 'px';
+      }
+    }
+  });
+  
+  setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+});
