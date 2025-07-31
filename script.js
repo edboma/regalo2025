@@ -1,11 +1,53 @@
+// Variables globales para el audio
+let audioPermitido = false;
+const audio = new Audio('assets/music.mp3');
+audio.loop = true;
+audio.volume = 0.3; // Volumen al 30% para mejor experiencia
+
+// Función para manejar el audio
+function toggleAudio() {
+  const icon = document.querySelector('.audio-control i');
+  const audioControl = document.querySelector('.audio-control');
+  
+  // Efecto visual al pulsar
+  audioControl.classList.add('pulsando');
+  setTimeout(() => audioControl.classList.remove('pulsando'), 200);
+  
+  if (audio.paused) {
+    audioPermitido = true;
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+      playPromise.then(_ => {
+        icon.classList.remove('fa-music');
+        icon.classList.add('fa-pause');
+      }).catch(error => {
+        console.error("Error al reproducir:", error);
+        if (audioPermitido) {
+          alert("Por favor, haz clic en el icono de música para activarlo. Algunos navegadores bloquean el audio automático.");
+        }
+      });
+    }
+  } else {
+    audio.pause();
+    icon.classList.remove('fa-pause');
+    icon.classList.add('fa-music');
+  }
+}
+
+// Función para inicializar la página
 function init(){
   startCounter();
   generateCalendarLink();
   generateQr();
   actualizarBotones();
   animarPrimeraCarga();
+  
+  // Configurar el control de audio
+  document.querySelector('.audio-control').addEventListener('click', toggleAudio);
 }
 
+// Función para los corazones de confeti
 function iniciarCorazones() {
   tsParticles.load("confetti-bg", {
     fullScreen:{enable:true,zIndex:1},
@@ -20,6 +62,7 @@ function iniciarCorazones() {
   });
 }
 
+// Función para comenzar la sorpresa
 function empezarSorpresa() {
   const pantalla = document.getElementById("pantalla-inicial");
   pantalla.style.opacity = 0;
@@ -31,6 +74,7 @@ function empezarSorpresa() {
   }, 800);
 }
 
+// Función para mostrar secciones
 function mostrar(id){
   document.querySelectorAll('.pantalla').forEach(s=>s.classList.remove('activa'));
   document.getElementById(id).classList.add('activa');
@@ -38,28 +82,7 @@ function mostrar(id){
   actualizarBotones();
 }
 
-function toggleAudio() {
-  const audio = document.getElementById('audio');
-  const icon = document.querySelector('.audio-control i');
-  
-  if (audio.paused) {
-    const playPromise = audio.play();
-    
-    if (playPromise !== undefined) {
-      playPromise.then(_ => {
-        icon.classList.remove('fa-music');
-        icon.classList.add('fa-pause');
-      }).catch(error => {
-        console.log("Error al reproducir audio:", error);
-      });
-    }
-  } else {
-    audio.pause();
-    icon.classList.remove('fa-pause');
-    icon.classList.add('fa-music');
-  }
-}
-
+// Contador regresivo
 function startCounter(){
   const target = new Date("2025-09-18T00:00:00");
   setInterval(()=>{
@@ -81,6 +104,7 @@ function startCounter(){
   }, 1000);
 }
 
+// Generar link para Google Calendar
 function generateCalendarLink(){
   const start = "20250918T090000Z", end = "20250921T180000Z";
   const url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
@@ -91,6 +115,7 @@ function generateCalendarLink(){
   document.getElementById("cal-link").href = url;
 }
 
+// Generar código QR
 function generateQr(){
   const pageUrl = window.location.href;
   document.getElementById("qr-img").src = 
@@ -98,6 +123,7 @@ function generateQr(){
     encodeURIComponent(pageUrl);
 }
 
+// Actualizar botones de navegación
 function actualizarBotones() {
   const nav = document.getElementById('botones-nav');
   const seccion = document.querySelector('.pantalla.activa').id;
@@ -129,6 +155,7 @@ function actualizarBotones() {
   });
 }
 
+// Animación de carga inicial
 function animarPrimeraCarga() {
   const partes = [
     "h1", "#contador-text", "#inicio h2",
@@ -143,20 +170,29 @@ function animarPrimeraCarga() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  window.addEventListener('resize', function() {
-    const fotoContainer = document.querySelector('.foto-inicial-container');
-    if (fotoContainer) {
-      const containerWidth = fotoContainer.offsetWidth;
-      const containerHeight = fotoContainer.offsetHeight;
-      const foto = document.querySelector('.foto-inicial');
-      
-      if (foto) {
-        foto.style.maxWidth = containerWidth + 'px';
-        foto.style.maxHeight = containerHeight + 'px';
-      }
+// Ajustar imagen inicial al cargar
+function ajustarImagenInicial() {
+  const fotoContainer = document.querySelector('.foto-inicial-container');
+  if (fotoContainer) {
+    const containerWidth = fotoContainer.offsetWidth;
+    const containerHeight = fotoContainer.offsetHeight;
+    const foto = document.querySelector('.foto-inicial');
+    
+    if (foto) {
+      foto.style.maxWidth = containerWidth + 'px';
+      foto.style.maxHeight = containerHeight + 'px';
     }
-  });
+  }
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+  // Configurar el reajuste de imagen al cambiar tamaño
+  window.addEventListener('resize', ajustarImagenInicial);
   
-  setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+  // Ajustar imagen inicial después de un breve retraso
+  setTimeout(ajustarImagenInicial, 100);
+  
+  // Precargar el audio
+  audio.load();
 });
